@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent, Badge, Button } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
+import { AnimatedText } from "@/components/animated-text";
 
 // Dữ liệu Giá trị cốt lõi (Sứ mệnh & Tầm nhìn)
 const CORE_VALUES = [
@@ -73,14 +74,16 @@ export const LandingAbout = () => {
         {/* --- PHẦN 1: GIỚI THIỆU & SỨ MỆNH --- */}
         <div className="text-center max-w-3xl mx-auto mb-20">
           <Badge variant="outline" className="mb-4 text-[hsl(var(--primary))] border-[hsl(var(--primary))] bg-blue-50">
-            VỀ CHÚNG TÔI
+            <AnimatedText>VỀ CHÚNG TÔI</AnimatedText>
           </Badge>
           <h2 className="text-4xl lg:text-5xl font-black mb-6 leading-tight">
-            Khát Vọng Tiên Phong <br />
-            <span className="text-[hsl(var(--primary))]">Lan Tỏa Giá Trị Việt</span>
+            <AnimatedText animationType="slideUp">
+              Khát Vọng Tiên Phong <br />
+              <span className="text-[hsl(var(--primary))]">Lan Tỏa Giá Trị Việt</span>
+            </AnimatedText>
           </h2>
           <p className="text-lg text-[hsl(var(--muted-foreground))] leading-relaxed">
-            Tuổi Trẻ Online không chỉ là trang tin tức, mà là ngôi nhà chung của Gen Z - nơi kết nối những trái tim nhiệt huyết, chia sẻ tri thức và cùng nhau kiến tạo tương lai.
+            <AnimatedText>Tuổi Trẻ Online không chỉ là trang tin tức, mà là ngôi nhà chung của Gen Z - nơi kết nối những trái tim nhiệt huyết, chia sẻ tri thức và cùng nhau kiến tạo tương lai.</AnimatedText>
           </p>
         </div>
 
@@ -93,8 +96,12 @@ export const LandingAbout = () => {
                 <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform", val.color)}>
                   <val.icon size={32} />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">{val.title}</h3>
-                <p className="text-[hsl(var(--muted-foreground))]">{val.description}</p>
+                <h3 className="text-2xl font-bold mb-3">
+                  <AnimatedText>{val.title}</AnimatedText>
+                </h3>
+                <p className="text-[hsl(var(--muted-foreground))]">
+                  <AnimatedText>{val.description}</AnimatedText>
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -103,8 +110,12 @@ export const LandingAbout = () => {
         {/* --- PHẦN 2: INFOGRAPHIC SƠ ĐỒ TỔ CHỨC --- */}
         <div className="flex flex-col items-center">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold mb-4">Bộ Máy Vận Hành</h3>
-            <p className="text-[hsl(var(--muted-foreground))]">Cấu trúc tinh gọn, linh hoạt và chuyên nghiệp</p>
+            <h3 className="text-3xl font-bold mb-4">
+              <AnimatedText>Bộ Máy Vận Hành</AnimatedText>
+            </h3>
+            <p className="text-[hsl(var(--muted-foreground))]">
+              <AnimatedText>Cấu trúc tinh gọn, linh hoạt và chuyên nghiệp</AnimatedText>
+            </p>
           </div>
 
           {/* Sơ đồ cây (Tree Diagram) */}
@@ -116,8 +127,12 @@ export const LandingAbout = () => {
                 <div className="bg-[hsl(var(--primary))] text-white p-3 rounded-xl mb-3 shadow-lg shadow-blue-500/30">
                   <ShieldCheck size={28} />
                 </div>
-                <h4 className="font-bold text-xl text-[hsl(var(--foreground))]">Ban Biên Tập</h4>
-                <p className="text-xs font-semibold text-[hsl(var(--primary))] uppercase tracking-wide mt-1">Định hướng chiến lược</p>
+                <h4 className="font-bold text-xl text-[hsl(var(--foreground))]">
+                  <AnimatedText>Ban Biên Tập</AnimatedText>
+                </h4>
+                <p className="text-xs font-semibold text-[hsl(var(--primary))] uppercase tracking-wide mt-1">
+                  <AnimatedText>Định hướng chiến lược</AnimatedText>
+                </p>
                 
                 {/* Connector Point Bottom */}
                 <div className="absolute -bottom-12 left-1/2 w-0.5 h-12 bg-gray-300"></div>
@@ -139,8 +154,12 @@ export const LandingAbout = () => {
                       <div className={cn("w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-3", dept.bg, dept.text)}>
                         <dept.icon size={20} />
                       </div>
-                      <h5 className="font-bold text-lg">{dept.name}</h5>
-                      <p className="text-sm text-[hsl(var(--muted-foreground))]">{dept.role}</p>
+                      <h5 className="font-bold text-lg">
+                        <AnimatedText>{dept.name}</AnimatedText>
+                      </h5>
+                      <p className="text-sm text-[hsl(var(--muted-foreground))]">
+                        <AnimatedText>{dept.role}</AnimatedText>
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -152,7 +171,7 @@ export const LandingAbout = () => {
           {/* CTA Button */}
           <div className="mt-16">
             <Button size="lg" className="rounded-full px-8 gap-2 shadow-lg shadow-blue-500/20 animate-bounce">
-              <Zap size={18} fill="currentColor" /> Gia nhập đội ngũ ngay
+              <Zap size={18} fill="currentColor" /> <AnimatedText>Gia nhập đội ngũ ngay</AnimatedText>
             </Button>
           </div>
         </div>

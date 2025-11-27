@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/primitives";
+import { AnimatedText } from "@/components/animated-text";
 
 export const LandingHero = () => {
   return (
@@ -12,32 +13,46 @@ export const LandingHero = () => {
           <div className="space-y-8 lg:w-1/2">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-bold text-blue-700 animate-pulse">
               <span className="h-2 w-2 rounded-full bg-blue-600" />
-              Thanh niên Việt Nam - Vững bước tương lai
+              <AnimatedText>
+                Thanh niên Việt Nam - Vững bước tương lai
+              </AnimatedText>
             </div>
+
             <h1 className="text-4xl font-extrabold leading-tight text-gray-900 lg:text-6xl">
-              Xây dưỡng <span className="text-blue-600">Tâm Trong</span> <br />
-              Rèn luyện <span className="text-orange-500">Trí Sáng</span> <br />
-              Xây dựng <span className="text-blue-600">Hoài Bão Lớn</span>
+              <AnimatedText animationType="slideUp">
+                Hành trang cho <br className="hidden lg:block" />
+                <span className="text-blue-600">Thanh Thiếu Niên</span> <br />
+                trong <span className="text-orange-500">Hành Trình Mới</span>
+              </AnimatedText>
             </h1>
+
             <p className="max-w-lg text-lg leading-relaxed text-gray-600">
-              Nơi kết nối những trái tim nhiệt huyết, chia sẻ những câu chuyện
-              đẹp về lý tưởng cách mạng và lan tỏa lối sống tích cực đến cộng
-              đồng Gen Z.
+              <AnimatedText animationType="fade">
+                Nơi kết nối những trái tim nhiệt huyết, chia sẻ những câu chuyện
+                đẹp về lý tưởng cách mạng và lan tỏa lối sống tích cực đến cộng
+                đồng Gen Z.
+              </AnimatedText>
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
                 size="lg"
                 className="gap-2 rounded-xl shadow-lg transition-all hover:-translate-y-1 hover:shadow-blue-500/30"
               >
-                Khám Phá Ngay <ArrowRight size={20} />
+                <AnimatedText>Khám Phá Ngay</AnimatedText>{" "}
+                <ArrowRight size={20} />
               </Button>
+
+              {/* --- [UPDATE] Sửa style hover nút Tìm Hiểu Thêm --- */}
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-xl border-2 bg-white font-bold text-gray-700 shadow-md hover:border-gray-200 hover:bg-gray-50"
+                className="rounded-xl border-2 bg-white font-bold text-gray-700 shadow-md 
+                           hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 
+                           transition-colors duration-300"
               >
-                Tìm Hiểu Thêm
+                <AnimatedText>Tìm Hiểu Thêm</AnimatedText>
               </Button>
+              {/* ------------------------------------------------ */}
             </div>
           </div>
           {/* Right Image */}
@@ -50,20 +65,22 @@ export const LandingHero = () => {
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-8">
                 <span className="mb-3 inline-block rounded-md bg-orange-500 px-3 py-1 text-xs font-bold text-white shadow-sm">
-                  TIÊU ĐIỂM THÁNG
+                  <AnimatedText>TIÊU ĐIỂM THÁNG</AnimatedText>
                 </span>
                 <h3 className="mb-2 text-2xl font-bold text-white">
-                  Thanh niên Đà Nẵng: Sẵn sàng vì cộng đồng
+                  <AnimatedText>
+                    Thanh niên Đà Nẵng: Sẵn sàng vì cộng đồng
+                  </AnimatedText>
                 </h3>
               </div>
             </div>
             <div className="absolute -bottom-6 -right-6 hidden rounded-2xl bg-yellow-400 p-6 shadow-xl md:block">
               <div className="text-center">
                 <span className="block text-3xl font-black text-blue-900">
-                  93+
+                  <AnimatedText animationType="slideUp">93+</AnimatedText>
                 </span>
                 <span className="text-xs font-bold uppercase text-blue-800">
-                  Năm thành lập Đoàn
+                  <AnimatedText>Năm thành lập Đoàn</AnimatedText>
                 </span>
               </div>
             </div>
