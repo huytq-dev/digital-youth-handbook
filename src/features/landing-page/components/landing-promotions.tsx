@@ -1,13 +1,4 @@
-import { useMemo } from "react";
-// 1. Tối ưu Import Icons
-import {
-  Zap,
-  Heart,
-  MessageCircle,
-  ArrowRight,
-  Users,
-} from "lucide-react";
-// 2. Tối ưu Import UI Components
+import { Zap, Heart, MessageCircle, ArrowRight, Users } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -16,10 +7,8 @@ import {
   Badge,
   Button,
 } from "@/components/ui/primitives";
-// 3. Import Typography Component
-import { TypographyBlockquote } from "@/components/ui/typography";
-// 4. Import Data từ Mock Data
-import { ARTICLES, QUOTES } from "@/data/mock-data";
+import { ARTICLES } from "@/data/landing-promotion-data";
+import { AnimatedText } from "@/components/animated-text";
 
 // Component hiển thị thẻ bài viết
 const ArticleCard = ({ article }: { article: (typeof ARTICLES)[0] }) => (
@@ -32,13 +21,14 @@ const ArticleCard = ({ article }: { article: (typeof ARTICLES)[0] }) => (
       />
       <div className="absolute top-4 left-4">
         <Badge className="bg-white/90 text-[hsl(var(--primary))] backdrop-blur shadow-sm hover:bg-white">
-          {article.category}
+          <AnimatedText>{article.category}</AnimatedText>
         </Badge>
       </div>
       {article.isHot && (
         <div className="absolute top-4 right-4 animate-pulse">
           <Badge variant="destructive" className="gap-1 shadow-lg">
-            <Zap size={12} fill="currentColor" /> HOT
+            <Zap size={12} fill="currentColor" />{" "}
+            <AnimatedText>HOT</AnimatedText>
           </Badge>
         </div>
       )}
@@ -46,83 +36,49 @@ const ArticleCard = ({ article }: { article: (typeof ARTICLES)[0] }) => (
     <CardContent className="flex flex-col flex-1 pt-6">
       <div className="flex items-center gap-2 text-xs font-semibold text-[hsl(var(--muted-foreground))] mb-3">
         <span className="text-[hsl(var(--accent))] flex items-center gap-1 bg-orange-50 px-2 py-1 rounded-md">
-          <Users size={12} /> {article.author}
+          <Users size={12} /> <AnimatedText>{article.author}</AnimatedText>
         </span>
         <span>•</span>
-        <span>{article.date}</span>
+        <span>
+          <AnimatedText>{article.date}</AnimatedText>
+        </span>
       </div>
       <h3 className="text-xl font-bold leading-tight mb-3 group-hover:text-[hsl(var(--primary))] transition-colors line-clamp-2">
-        {article.title}
+        <AnimatedText>{article.title}</AnimatedText>
       </h3>
       <p className="text-sm text-[hsl(var(--muted-foreground))] line-clamp-3 mb-6 flex-1">
-        {article.description}
+        <AnimatedText>{article.description}</AnimatedText>
       </p>
       <div className="flex items-center justify-between pt-4 border-t border-dashed border-[hsl(var(--border))] mt-auto">
         <div className="flex gap-4 text-[hsl(var(--muted-foreground))] text-xs font-bold">
           <span className="flex items-center gap-1 group/icon hover:text-red-500 transition-colors cursor-pointer">
-            <Heart size={14} /> {article.likes}
+            <Heart size={14} /> <AnimatedText>{article.likes}</AnimatedText>
           </span>
           <span className="flex items-center gap-1 group/icon hover:text-blue-500 transition-colors cursor-pointer">
-            <MessageCircle size={14} /> {article.comments}
+            <MessageCircle size={14} />{" "}
+            <AnimatedText>{article.comments}</AnimatedText>
           </span>
         </div>
         <Button
           variant="link"
           className="p-0 h-auto gap-1 text-xs font-bold group-hover:translate-x-1 transition-transform"
         >
-          Đọc tiếp <ArrowRight size={14} />
+          <AnimatedText>Đọc tiếp</AnimatedText> <ArrowRight size={14} />
         </Button>
       </div>
     </CardContent>
   </Card>
 );
 
-// Component Quote (Tự động thay đổi theo ngày)
-const QuoteSection = () => {
-  // Logic: Lấy ngày hiện tại (1-31) chia lấy dư cho số lượng quote
-  // Kết quả sẽ là index của quote cần hiển thị.
-  // Ví dụ: Ngày 5, có 7 quote => 5 % 7 = 5 (hiện quote số 5)
-  // Ngày 8, có 7 quote => 8 % 7 = 1 (hiện quote số 1)
-  const dailyQuote = useMemo(() => {
-    const today = new Date().getDate();
-    const index = today % QUOTES.length;
-    return QUOTES[index];
-  }, []);
-
-  return (
-    <section className="py-12 md:py-16 my-12">
-      <div className="max-w-4xl mx-auto px-6 md:px-8 relative z-10">
-        {/* 1. Phần Quote Text */}
-        <div className="mb-4">
-          <TypographyBlockquote 
-            className="text-2xl md:text-3xl font-medium leading-relaxed 
-                       text-[hsl(var(--foreground))] border-l-4 
-                       border-[hsl(var(--primary))] pl-6 mt-0 italic"
-          >
-            "{dailyQuote.content}"
-          </TypographyBlockquote>
-        </div>
-        
-        {/* 2. Phần Tác giả */}
-        <div className="text-right mt-6">
-          <p className="text-lg font-semibold text-[hsl(var(--muted-foreground))]">
-            — {dailyQuote.author}
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
 export const LandingPromotions = () => {
   return (
     <section className="pt-12 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="mb-12 text-center">
         <Badge variant="accent" className="mb-3">
-          CẬP NHẬT 24/7
+          <AnimatedText>CẬP NHẬT 24/7</AnimatedText>
         </Badge>
         <h2 className="text-3xl lg:text-5xl font-black tracking-tight">
-          Tiêu Điểm Nổi Bật
+          <AnimatedText animationType="slideUp">Tiêu Điểm Nổi Bật</AnimatedText>
         </h2>
       </div>
 
@@ -143,7 +99,9 @@ export const LandingPromotions = () => {
                   <div className="bg-[hsl(var(--accent))] p-2 rounded-lg text-white">
                     <Zap size={20} fill="currentColor" />
                   </div>
-                  <h3 className="font-bold text-xl">Tin Mới Nhất</h3>
+                  <h3 className="font-bold text-xl">
+                    <AnimatedText>Tin Mới Nhất</AnimatedText>
+                  </h3>
                 </div>
                 <div className="space-y-4">
                   {[1, 2, 3].map((_, i) => (
@@ -160,11 +118,13 @@ export const LandingPromotions = () => {
                       </div>
                       <div>
                         <h4 className="font-bold text-sm line-clamp-2 mb-1 group-hover:text-[hsl(var(--primary))] transition-colors">
-                          Hội nghị tuyên dương thanh niên tiên tiến làm theo lời
-                          Bác
+                          <AnimatedText>
+                            Hội nghị tuyên dương thanh niên tiên tiến làm theo
+                            lời Bác
+                          </AnimatedText>
                         </h4>
                         <span className="text-xs text-[hsl(var(--muted-foreground))]">
-                          2 giờ trước
+                          <AnimatedText>2 giờ trước</AnimatedText>
                         </span>
                       </div>
                     </div>
@@ -177,16 +137,12 @@ export const LandingPromotions = () => {
                 variant="outline"
                 className="w-full border-[hsl(var(--primary))] text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] hover:text-white"
               >
-                Xem Tất Cả
+                <AnimatedText>Xem Tất Cả</AnimatedText>
               </Button>
             </CardFooter>
           </Card>
         </div>
       </div>
-
     </section>
   );
 };
-
-// Export QuoteSection để sử dụng riêng biệt
-export { QuoteSection };

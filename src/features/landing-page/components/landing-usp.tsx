@@ -9,6 +9,7 @@ import {
   Waves,
   Flame,
 } from "lucide-react";
+import { AnimatedText } from "@/components/animated-text";
 
 export const LandingUSP = () => {
   const categories = [
@@ -31,10 +32,12 @@ export const LandingUSP = () => {
         
         <div className="mb-16 text-center space-y-4">
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[hsl(var(--foreground))]">
-            Khám phá <span className="text-[hsl(var(--primary))]">Chuyên mục</span>
+            <AnimatedText animationType="slideUp">
+              Khám phá <span className="text-[hsl(var(--primary))]">Chuyên mục</span>
+            </AnimatedText>
           </h2>
           <p className="text-[hsl(var(--muted-foreground))] text-lg md:text-xl font-medium max-w-3xl mx-auto">
-            Nền tảng kiến thức toàn diện, khơi nguồn cảm hứng cho thế hệ trẻ.
+            <AnimatedText>Nền tảng kiến thức toàn diện, khơi nguồn cảm hứng cho thế hệ trẻ.</AnimatedText>
           </p>
         </div>
 
@@ -62,7 +65,7 @@ export const LandingUSP = () => {
                 </div>
                 
                 <span className="font-semibold text-base text-[hsl(var(--foreground))] group-hover:text-[hsl(var(--primary))] transition-colors">
-                  {cat.name}
+                  <AnimatedText>{cat.name}</AnimatedText>
                 </span>
 
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
