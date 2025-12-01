@@ -1,40 +1,40 @@
 import { lazy, Suspense } from "react";
 import { cn } from "@/lib/utils";
 import { HomeHeader } from "@/features/home/components/home-header";
-import { HomeHero } from "@/features/home/components/home-hero";
+import { LandingHero } from "@/features/landing-page/components/landing-hero";
 
-const HomeIntroduction = lazy(() =>
-  import("@/features/home/components/home-introduction").then((module) => ({
-    default: module.HomeIntroduction,
+const LandingIntroduction = lazy(() =>
+  import("@/features/landing-page/components/landing-introduction").then(
+    (module) => ({ default: module.LandingIntroduction })
+  )
+);
+
+const LandingUSP = lazy(() =>
+  import("@/features/landing-page/components/landing-usp").then((module) => ({
+    default: module.LandingUSP,
   }))
 );
 
-const HomeUSP = lazy(() =>
-  import("@/features/home/components/home-usp").then((module) => ({
-    default: module.HomeUSP,
-  }))
+const LandingPromotions = lazy(() =>
+  import("@/features/landing-page/components/landing-promotions").then(
+    (module) => ({ default: module.LandingPromotions })
+  )
 );
 
-const HomePromotions = lazy(() =>
-  import("@/features/home/components/home-promotions").then((module) => ({
-    default: module.HomePromotions,
-  }))
+const LandingQuote = lazy(() =>
+  import("@/features/landing-page/components/landing-quote").then(
+    (module) => ({ default: module.LandingQuote })
+  )
 );
 
-const HomeQuote = lazy(() =>
-  import("@/features/home/components/home-quote").then((module) => ({
-    default: module.HomeQuote,
-  }))
-);
-
-const HomeFooter = lazy(() =>
-  import("@/features/home/components/home-footer").then((module) => ({
-    default: module.HomeFooter,
-  }))
+const LandingFooter = lazy(() =>
+  import("@/features/landing-page/components/landing-footer").then(
+    (module) => ({ default: module.LandingFooter })
+  )
 );
 
 const ComponentLoader = () => (
-  <div className="flex min-h-[260px] w-full items-center justify-center bg-gray-50/50">
+  <div className="flex min-h-[300px] w-full items-center justify-center bg-gray-50/50">
     <div className="h-8 w-8 animate-spin rounded-full border-2 border-[hsl(var(--primary))] border-t-transparent" />
   </div>
 );
@@ -51,18 +51,18 @@ function HomePage() {
       <HomeHeader />
 
       <main className="w-full flex-1" role="main">
-        <HomeHero />
+        <LandingHero />
 
         <Suspense fallback={<ComponentLoader />}>
-          <HomeIntroduction />
-          <HomeUSP />
-          <HomePromotions />
-          <HomeQuote />
+          <LandingIntroduction />
+          <LandingUSP />
+          <LandingPromotions />
+          <LandingQuote />
         </Suspense>
       </main>
 
-      <Suspense fallback={<div className="h-16 bg-white" />}>
-        <HomeFooter />
+      <Suspense fallback={<div className="h-20 bg-white" />}>
+        <LandingFooter />
       </Suspense>
     </div>
   );
