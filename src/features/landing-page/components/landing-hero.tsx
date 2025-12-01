@@ -20,7 +20,7 @@ export const LandingHero = () => {
 
             <h1 className="text-4xl font-extrabold leading-tight text-gray-900 lg:text-6xl">
               <AnimatedText animationType="slideUp">
-                Hành trang cho <br className="hidden lg:block" />
+                Hành trang số cho <br className="hidden lg:block" />
                 <span className="text-blue-600">Thanh Thiếu Niên</span> <br />
                 trong <span className="text-orange-500">Hành Trình Mới</span>
               </AnimatedText>

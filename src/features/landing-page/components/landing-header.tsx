@@ -47,6 +47,10 @@ const NAVIGATION: NavItem[] = [
       { label: "Câu chuyện truyền cảm hứng" },
     ],
   },
+  {
+    label: "Thi hay",
+    href: "/thi-hay",
+  },
 ];
 
 const SheetOverlay = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => (

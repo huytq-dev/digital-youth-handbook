@@ -46,6 +46,10 @@ const NAVIGATION: NavItem[] = [
       { label: "Câu chuyện truyền cảm hứng" },
     ],
   },
+  {
+    label: "Thi hay",
+    href: "/thi-hay",
+  },
 ];
 
 const SheetOverlay = ({
