@@ -347,7 +347,8 @@ export const LandingHero = () => {
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       size="lg"
-                      className="gap-2 bg-blue-600 text-white font-bold border-2 border-black rounded-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all"
+                      // Neo-Brutalism: Default shadow 4px, Hover lift 2px + shadow 6px, Active press 4px + no shadow
+                      className="gap-2 bg-blue-600 text-white font-black text-lg uppercase rounded-lg border-2 border-black shadow-[4px_4px_0px_black] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] hover:bg-blue-700 active:translate-y-1 active:translate-x-1 active:shadow-none"
                     >
                       Bắt Đầu Ngay <ArrowRight size={20} strokeWidth={3} />
                     </Button>
@@ -366,7 +367,8 @@ export const LandingHero = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="bg-white text-black font-bold border-2 border-black rounded-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 transition-all"
+                  // Neo-Brutalism: Default shadow 4px, Hover lift 2px + shadow 6px, Active press 4px + no shadow
+                  className="bg-white text-black font-black text-lg uppercase rounded-lg border-2 border-black shadow-[4px_4px_0px_black] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] hover:bg-gray-50 active:translate-y-1 active:translate-x-1 active:shadow-none"
                 >
                   Tìm Hiểu Thêm
                 </Button>
