@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, ChevronDown, Star, LogIn, UserPlus, User, LogOut } from "lucide-react";
+import { Menu, ChevronDown, Star, User, LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { authService } from "@/features/auth/auth.service";
 import { useSignOutMutation } from "@/features/auth/auth.slice";
 import type { UserDomainModel } from "@/features/common/common.type";
+import { useIsMobile, useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // --- Types ---
 type NavSubItem = { label: string; href?: string };
@@ -18,30 +20,12 @@ const NAVIGATION: NavItem[] = [
     label: "Chủ đề học tập",
     href: "/learning-topics",
     subItems: [
-      {
-        label: "Lý tưởng & Hoài bão",
-        href: "/learning-topics/ly-tuong",
-      },
-      {
-        label: "Tư tưởng & Đạo đức",
-        href: "/learning-topics/tu-tuong",
-      },
-      {
-        label: "Văn hóa & Lối sống",
-        href: "/learning-topics/van-hoa",
-      },
-      {
-        label: "Mạng xã hội an toàn",
-        href: "/learning-topics/an-toan-mang",
-      },
-      {
-        label: "Thanh niên tình nguyện",
-        href: "/learning-topics/tinh-nguyen",
-      },
-      {
-        label: "Chuyển đổi số",
-        href: "/learning-topics/chuyen-doi-so",
-      },
+      { label: "Lý tưởng & Hoài bão", href: "/learning-topics/ly-tuong" },
+      { label: "Tư tưởng & Đạo đức", href: "/learning-topics/tu-tuong" },
+      { label: "Văn hóa & Lối sống", href: "/learning-topics/van-hoa" },
+      { label: "Mạng xã hội an toàn", href: "/learning-topics/an-toan-mang" },
+      { label: "Thanh niên tình nguyện", href: "/learning-topics/tinh-nguyen" },
+      { label: "Chuyển đổi số", href: "/learning-topics/chuyen-doi-so" },
     ],
   },
   {
@@ -66,37 +50,42 @@ const NAVIGATION: NavItem[] = [
 
 // --- Sub-components ---
 
-// Mobile Sheet Overlay
-const SheetOverlay = ({
-  isOpen,
-  onClose,
-  children,
-}: {
+interface SheetOverlayProps {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactNode;
-}) => (
+  children: ReactNode;
+}
+
+const SheetOverlay = memo(({ isOpen, onClose, children }: SheetOverlayProps) => (
   <>
+    {/* 1. Backdrop (Lớp nền đen mờ): Tăng z-index lên 9998 */}
     {isOpen && (
       <div
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
       />
     )}
+    
+    {/* 2. Menu Sheet: Tăng z-index lên 9999 (cao nhất) và dùng h-[100dvh] */}
     <div
       className={cn(
-        "fixed inset-y-0 right-0 z-50 h-full w-[85%] sm:w-[400px] bg-[#fff9f0] border-l-4 border-black p-6 shadow-[-10px_0px_0px_rgba(0,0,0,0.2)] transition-transform duration-300 ease-in-out flex flex-col",
+        "fixed inset-y-0 right-0 z-[9999] h-[100dvh] w-full sm:w-[400px] bg-[#fff9f0] border-l-4 border-black shadow-[-10px_0px_20px_rgba(0,0,0,0.2)] transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col",
         isOpen ? "translate-x-0" : "translate-x-full"
       )}
     >
-      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-yellow-400 to-red-500" />
-      {children}
+      {/* Decoration Line */}
+      <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 via-yellow-400 to-red-500 z-10" />
+      
+      {/* Content Container */}
+      <div className="flex h-full flex-col overflow-hidden px-6 py-6 relative z-0">
+        {children}
+      </div>
     </div>
   </>
-);
+));
+SheetOverlay.displayName = "SheetOverlay";
 
-// Nút Nav Desktop
-const NavLinkBtn = ({ item }: { item: NavItem }) => {
+const NavLinkBtn = memo(({ item }: { item: NavItem }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -123,7 +112,6 @@ const NavLinkBtn = ({ item }: { item: NavItem }) => {
               />
             )}
           </span>
-          {/* Hiệu ứng highlight */}
           {isHovered && (
             <motion.div
               layoutId="nav-highlight"
@@ -136,7 +124,6 @@ const NavLinkBtn = ({ item }: { item: NavItem }) => {
         </Button>
       </Link>
 
-      {/* Dropdown Menu */}
       <AnimatePresence>
         {item.subItems && isHovered && (
           <motion.div
@@ -146,9 +133,7 @@ const NavLinkBtn = ({ item }: { item: NavItem }) => {
             transition={{ duration: 0.2 }}
             className="absolute left-1/2 -translate-x-1/2 top-full pt-4 w-64"
           >
-            {/* Mũi tên trỏ lên */}
             <div className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l-2 border-t-2 border-black rotate-45 z-20" />
-
             <div className="bg-white border-2 border-black shadow-[6px_6px_0px_black] rounded-xl overflow-hidden p-2 relative z-10">
               {item.subItems.map((subItem) => (
                 <Link
@@ -168,109 +153,102 @@ const NavLinkBtn = ({ item }: { item: NavItem }) => {
       </AnimatePresence>
     </div>
   );
-};
+});
+NavLinkBtn.displayName = "NavLinkBtn";
 
-// User Avatar Button với Neo-Brutalism
-const UserAvatarButton = ({
-  user,
-  isOpen,
-  onToggle,
-}: {
+interface UserAvatarButtonProps {
   user: UserDomainModel;
   isOpen: boolean;
   onToggle: () => void;
-}) => {
-  const initials = user.name
-    ?.split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2) || "U";
+}
 
-  return (
-    <div className="relative">
-      <button
-        onClick={onToggle}
-        // Neo-Brutalism: Default shadow 4px, Hover lift 2px + shadow 6px, Active press 4px + no shadow
-        className={cn(
-          "h-11 w-11 rounded-lg border-2 border-black bg-blue-600 text-white font-black text-sm shadow-[4px_4px_0px_black] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] hover:bg-blue-700 active:translate-y-1 active:translate-x-1 active:shadow-none flex items-center justify-center",
-          isOpen && "bg-blue-700"
-        )}
-      >
-        {initials}
-      </button>
-    </div>
-  );
-};
+const UserAvatarButton = memo(
+  ({ user, isOpen, onToggle }: UserAvatarButtonProps) => {
+    const initials =
+      user.name
+        ?.split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2) || "U";
 
-// User Dropdown Menu
-const UserDropdownMenu = ({
-  user,
-  isOpen,
-  onClose,
-  onSignOut,
-}: {
+    return (
+      <div className="relative">
+        <button
+          onClick={onToggle}
+          className={cn(
+            "h-11 w-11 rounded-lg border-2 border-black bg-blue-600 text-white font-black text-sm shadow-[4px_4px_0px_black] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] hover:bg-blue-700 active:translate-y-1 active:translate-x-1 active:shadow-none flex items-center justify-center",
+            isOpen && "bg-blue-700"
+          )}
+        >
+          {initials}
+        </button>
+      </div>
+    );
+  }
+);
+UserAvatarButton.displayName = "UserAvatarButton";
+
+interface UserDropdownMenuProps {
   user: UserDomainModel;
   isOpen: boolean;
   onClose: () => void;
   onSignOut: () => void;
-}) => {
-  const navigate = useNavigate();
+}
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40"
-            onClick={onClose}
-          />
-          {/* Menu */}
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full mt-2 w-56 bg-white border-2 border-black shadow-[6px_6px_0px_black] rounded-xl overflow-hidden z-50"
-          >
-            {/* User Info */}
-            <div className="px-4 py-3 border-b-2 border-black bg-blue-50">
-              <p className="font-black text-sm text-slate-900">{user.name}</p>
-              <p className="text-xs font-bold text-slate-600 truncate">
-                {user.email}
-              </p>
-            </div>
+const UserDropdownMenu = memo(
+  ({ user, isOpen, onClose, onSignOut }: UserDropdownMenuProps) => {
+    const navigate = useNavigate();
 
-            {/* Menu Items */}
-            <div className="p-2">
-              <button
-                onClick={() => {
-                  navigate("/profile");
-                  onClose();
-                }}
-                className="w-full px-4 py-3 rounded-lg font-bold text-sm text-left hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center gap-3 border-2 border-transparent hover:border-black/10"
-              >
-                <User size={18} />
-                Trang cá nhân
-              </button>
-              <button
-                onClick={() => {
-                  onSignOut();
-                  onClose();
-                }}
-                className="w-full px-4 py-3 rounded-lg font-bold text-sm text-left hover:bg-red-50 hover:text-red-700 transition-colors flex items-center gap-3 border-2 border-transparent hover:border-black/10 mt-1"
-              >
-                <LogOut size={18} />
-                Đăng xuất
-              </button>
-            </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
-};
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <div className="fixed inset-0 z-40" onClick={onClose} />
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="absolute right-0 top-full mt-2 w-56 bg-white border-2 border-black shadow-[6px_6px_0px_black] rounded-xl overflow-hidden z-50"
+            >
+              <div className="px-4 py-3 border-b-2 border-black bg-blue-50">
+                <p className="font-black text-sm text-slate-900">{user.name}</p>
+                <p className="text-xs font-bold text-slate-600 truncate">
+                  {user.email}
+                </p>
+              </div>
+
+              <div className="p-2">
+                <button
+                  onClick={() => {
+                    navigate("/profile");
+                    onClose();
+                  }}
+                  className="w-full px-4 py-3 rounded-lg font-bold text-sm text-left hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center gap-3 border-2 border-transparent hover:border-black/10"
+                >
+                  <User size={18} />
+                  Trang cá nhân
+                </button>
+                <button
+                  onClick={() => {
+                    onSignOut();
+                    onClose();
+                  }}
+                  className="w-full px-4 py-3 rounded-lg font-bold text-sm text-left hover:bg-red-50 hover:text-red-700 transition-colors flex items-center gap-3 border-2 border-transparent hover:border-black/10 mt-1"
+                >
+                  <LogOut size={18} />
+                  Đăng xuất
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    );
+  }
+);
+UserDropdownMenu.displayName = "UserDropdownMenu";
 
 // --- MAIN COMPONENT ---
 
@@ -282,8 +260,9 @@ export const UnifiedHeader = () => {
   const [isAvatarOpen, setIsAvatarOpen] = useState(false);
   const navigate = useNavigate();
   const [signOut] = useSignOutMutation();
+  const shouldReduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
 
-  // Check auth status on mount and listen to storage changes
   useEffect(() => {
     const checkAuth = () => {
       const authenticated = authService.isAuthenticated();
@@ -294,10 +273,7 @@ export const UnifiedHeader = () => {
         setUser(null);
       }
     };
-
     checkAuth();
-
-    // Listen to storage changes (for cross-tab sync)
     const handleStorageChange = (e: StorageEvent) => {
       if (
         e.key === "access_token" ||
@@ -307,13 +283,9 @@ export const UnifiedHeader = () => {
         checkAuth();
       }
     };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    // Also listen to custom events (for same-tab updates)
     const handleAuthChange = () => checkAuth();
+    window.addEventListener("storage", handleStorageChange);
     window.addEventListener("auth-state-changed", handleAuthChange);
-
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("auth-state-changed", handleAuthChange);
@@ -321,12 +293,22 @@ export const UnifiedHeader = () => {
   }, []);
 
   useEffect(() => {
+    if (isOpen) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     try {
       if (user?.userId) {
         await signOut({ userId: user.userId }).unwrap();
@@ -336,10 +318,8 @@ export const UnifiedHeader = () => {
       setUser(null);
       setIsAvatarOpen(false);
       navigate("/");
-      // Dispatch custom event for same-tab sync
       window.dispatchEvent(new Event("auth-state-changed"));
-    } catch (error) {
-      // Even if API fails, clear local data
+    } catch {
       authService.clearAuthData();
       setIsAuthenticated(false);
       setUser(null);
@@ -347,7 +327,7 @@ export const UnifiedHeader = () => {
       navigate("/");
       window.dispatchEvent(new Event("auth-state-changed"));
     }
-  };
+  }, [navigate, signOut, user?.userId]);
 
   return (
     <nav
@@ -370,7 +350,10 @@ export const UnifiedHeader = () => {
                 <Star
                   fill="currentColor"
                   size={22}
-                  className="group-hover:rotate-180 transition-transform duration-500"
+                  className={cn(
+                    "transition-transform duration-500",
+                    shouldReduceMotion || isMobile ? "" : "group-hover:rotate-180"
+                  )}
                 />
               </div>
               <div className="absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-full border-2 border-black" />
@@ -397,19 +380,12 @@ export const UnifiedHeader = () => {
             {!isAuthenticated ? (
               <>
                 <Link to="/auth/sign-in">
-                  {/* Neo-Brutalism: Default shadow 4px, Hover lift 2px + shadow 6px, Active press 4px + no shadow */}
-                  <button
-                    className="h-11 px-6 rounded-lg font-black text-base border-2 border-black bg-white text-slate-900 shadow-[4px_4px_0px_black] transition-all hover:bg-slate-50 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none flex items-center justify-center"
-                  >
+                  <button className="h-11 px-6 rounded-lg font-black text-base border-2 border-black bg-white text-slate-900 shadow-[4px_4px_0px_black] transition-all hover:bg-slate-50 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none flex items-center justify-center">
                     Đăng nhập
                   </button>
                 </Link>
-
                 <Link to="/auth/sign-up">
-                  {/* Neo-Brutalism: Default shadow 4px, Hover lift 2px + shadow 6px, Active press 4px + no shadow */}
-                  <button
-                    className="h-11 px-6 bg-blue-600 text-white font-black text-base border-2 border-black rounded-lg shadow-[4px_4px_0px_black] transition-all hover:bg-blue-700 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none flex items-center gap-2 justify-center"
-                  >
+                  <button className="h-11 px-6 bg-blue-600 text-white font-black text-base border-2 border-black rounded-lg shadow-[4px_4px_0px_black] transition-all hover:bg-blue-700 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none flex items-center gap-2 justify-center">
                     Đăng ký <ArrowRightIcon className="w-4 h-4" />
                   </button>
                 </Link>
@@ -419,7 +395,7 @@ export const UnifiedHeader = () => {
                 <UserAvatarButton
                   user={user}
                   isOpen={isAvatarOpen}
-                  onToggle={() => setIsAvatarOpen(!isAvatarOpen)}
+                  onToggle={() => setIsAvatarOpen((prev) => !prev)}
                 />
                 <UserDropdownMenu
                   user={user}
@@ -445,53 +421,76 @@ export const UnifiedHeader = () => {
         </div>
       </div>
 
-      {/* Mobile Sheet Content */}
+      {/* ------------------------------------------------ */}
+      {/* MOBILE SHEET CONTENT - Đã style lại theo yêu cầu */}
+      {/* ------------------------------------------------ */}
       <SheetOverlay isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-black border-dashed">
-          <span className="font-black text-2xl flex items-center gap-2">
-            <div className="w-4 h-4 bg-orange-500 border-2 border-black rounded-full" />
-            MENU
-          </span>
+        
+        {/* HEADER: Chấm cam + MENU + Đường kẻ đứt nét */}
+        <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-black border-dashed">
+          <div className="flex items-center gap-3">
+            {/* Chấm tròn cam */}
+            <div className="w-5 h-5 bg-orange-500 rounded-full border-2 border-black shadow-[1px_1px_0px_black]" />
+            <span className="font-black text-2xl tracking-tight text-slate-900">
+              MENU
+            </span>
+          </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsOpen(false)}
-            className="hover:bg-red-100 hover:text-red-600 rounded-full transition-colors"
+            className="hover:bg-transparent text-slate-500 hover:text-black transition-colors"
           >
-            <X size={28} strokeWidth={3} />
+            <X size={24} strokeWidth={3} />
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-2 custom-scrollbar">
+        {/* NAVIGATION LIST */}
+        <div className="flex-1 overflow-y-auto flex flex-col gap-4 pr-1 pb-4 custom-scrollbar">
           {NAVIGATION.map((item) => (
             <div
               key={item.label}
-              className="border-2 border-black rounded-xl bg-white mb-3 shadow-[3px_3px_0px_rgba(0,0,0,0.1)] overflow-hidden"
+              // Khung bao ngoài: Trắng, viền đen, bo góc, shadow nhẹ
+              className="border-2 border-black rounded-xl bg-white shadow-[3px_3px_0px_rgba(0,0,0,0.1)] overflow-hidden"
             >
-              <div className="p-3 font-bold text-lg flex items-center justify-between bg-slate-50">
-                {item.label}
-              </div>
-              {item.subItems && (
-                <div className="border-t-2 border-black divide-y-2 divide-dashed divide-slate-200">
-                  {item.subItems.map((subItem) => (
-                    <Link
-                      key={subItem.label}
-                      to={subItem.href || "#"}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <div className="p-3 pl-4 text-sm font-semibold text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+              {item.subItems ? (
+                // --- TRƯỜNG HỢP CÓ SUBMENU (VD: Chủ đề học tập) ---
+                <>
+                  <div className="px-5 py-4 bg-white border-b border-black/10">
+                    <span className="font-bold text-lg text-slate-900 block">
+                      {item.label}
+                    </span>
+                  </div>
+                  <div className="px-5 py-4 flex flex-col gap-3.5 bg-white">
+                    {item.subItems.map((subItem) => (
+                      <Link
+                        key={subItem.label}
+                        to={subItem.href || "#"}
+                        onClick={() => setIsOpen(false)}
+                        className="group flex items-center gap-3 text-slate-600 font-semibold text-[15px] hover:text-blue-600 transition-colors"
+                      >
+                        {/* Bullet point màu xanh */}
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 group-hover:scale-125 transition-transform" />
                         {subItem.label}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                // --- TRƯỜNG HỢP LINK ĐƠN (VD: Trang chủ) ---
+                <Link
+                  to={item.href || "#"}
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full px-5 py-4 font-bold text-lg text-slate-900 hover:bg-slate-50 transition-colors"
+                >
+                  {item.label}
+                </Link>
               )}
             </div>
           ))}
         </div>
 
-        {/* Mobile Auth Buttons or User Info */}
+        {/* FOOTER: Auth Buttons (Nằm dưới cùng, có đường kẻ đặc) */}
         <div className="mt-auto pt-6 border-t-2 border-black">
           {!isAuthenticated ? (
             <div className="grid grid-cols-2 gap-3">
@@ -500,57 +499,45 @@ export const UnifiedHeader = () => {
                 className="w-full"
                 onClick={() => setIsOpen(false)}
               >
-                {/* Neo-Brutalism: Default shadow 4px, Hover lift 2px + shadow 6px, Active press 4px + no shadow */}
-                <Button
-                  variant="outline"
-                  className="w-full h-12 rounded-xl border-2 border-black font-black bg-white text-slate-900 shadow-[4px_4px_0px_black] transition-all hover:bg-slate-50 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none"
-                >
-                  <LogIn size={18} className="mr-2" /> Đăng nhập
-                </Button>
+                <button className="w-full h-12 rounded-xl border-2 border-black font-black text-base bg-white text-slate-900 shadow-[3px_3px_0px_black] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all">
+                  Đăng nhập
+                </button>
               </Link>
               <Link
                 to="/auth/sign-up"
                 className="w-full"
                 onClick={() => setIsOpen(false)}
               >
-                {/* Neo-Brutalism: Default shadow 4px, Hover lift 2px + shadow 6px, Active press 4px + no shadow */}
-                <Button
-                  variant="default"
-                  className="w-full h-12 rounded-xl border-2 border-black bg-blue-600 hover:bg-blue-700 text-white font-black shadow-[4px_4px_0px_black] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none"
-                >
-                  <UserPlus size={18} className="mr-2" /> Đăng ký
-                </Button>
+                <button className="w-full h-12 rounded-xl border-2 border-black font-black text-base bg-blue-600 text-white shadow-[3px_3px_0px_black] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none transition-all">
+                  Đăng ký
+                </button>
               </Link>
             </div>
           ) : user ? (
+            // User Logged In View (Mobile)
             <div className="space-y-3">
-              <div className="px-4 py-3 bg-blue-50 border-2 border-black rounded-xl">
-                <p className="font-black text-sm text-slate-900">{user.name}</p>
-                <p className="text-xs font-bold text-slate-600 truncate">
-                  {user.email}
-                </p>
+              <div className="px-4 py-3 bg-blue-50 border-2 border-black rounded-xl flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-600 border-2 border-black flex items-center justify-center text-white font-black">
+                  {user.name?.charAt(0)}
+                </div>
+                <div className="overflow-hidden">
+                   <p className="font-black text-sm text-slate-900 truncate">{user.name}</p>
+                   <p className="text-xs font-bold text-slate-600 truncate">{user.email}</p>
+                </div>
               </div>
-              <Link
-                to="/profile"
-                className="w-full block"
-                onClick={() => setIsOpen(false)}
-              >
-                <Button
-                  variant="outline"
-                  className="w-full h-12 rounded-xl border-2 border-black font-black bg-white text-slate-900 shadow-[4px_4px_0px_black] transition-all hover:bg-slate-50 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none"
-                >
-                  <User size={18} className="mr-2" /> Trang cá nhân
-                </Button>
-              </Link>
-              <button
-                onClick={() => {
-                  handleSignOut();
-                  setIsOpen(false);
-                }}
-                className="w-full h-12 rounded-xl border-2 border-black font-black bg-red-600 hover:bg-red-700 text-white shadow-[4px_4px_0px_black] transition-all hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[6px_6px_0px_black] active:translate-y-1 active:translate-x-1 active:shadow-none flex items-center justify-center gap-2"
-              >
-                <LogOut size={18} /> Đăng xuất
-              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <Link to="/profile" onClick={() => setIsOpen(false)}>
+                   <button className="w-full h-11 rounded-lg border-2 border-black bg-white font-bold text-sm shadow-[2px_2px_0px_black] active:shadow-none active:translate-y-[2px] transition-all">
+                      Cá nhân
+                   </button>
+                </Link>
+                 <button 
+                    onClick={() => { handleSignOut(); setIsOpen(false); }}
+                    className="w-full h-11 rounded-lg border-2 border-black bg-red-100 text-red-700 font-bold text-sm shadow-[2px_2px_0px_black] active:shadow-none active:translate-y-[2px] transition-all"
+                 >
+                    Đăng xuất
+                 </button>
+              </div>
             </div>
           ) : null}
         </div>
@@ -577,4 +564,3 @@ const ArrowRightIcon = (props: any) => (
     ></path>
   </svg>
 );
-

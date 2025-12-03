@@ -4,7 +4,8 @@ import { UnifiedHeader } from "@/components/layout/unified-header";
 import { TopicDetailTemplate } from "@/features/learning-topics/components/topic-detail-template";
 import { BookOpen, ArrowRight, Frown, Sparkles, Star, Zap } from "lucide-react";
 import { AnimatedText } from "@/components/animated-text";
-import { motion } from "framer-motion"; // 1. Import Framer Motion
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // SVG Doodle Pattern cho nền (Chấm bi vẽ tay)
 const doodleDotPattern = "data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2394a3b8' fill-opacity='0.2' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='2'/%3E%3Ccircle cx='13' cy='13' r='2'/%3E%3C/g%3E%3C/svg%3E";
@@ -55,6 +56,7 @@ const cardVariants = {
 const LearningTopicsPage = () => {
   const { slug } = useParams<{ slug?: string }>();
   const navigate = useNavigate();
+  const shouldReduceMotion = useReducedMotion();
 
   const topic = slug
     ? LEARNING_TOPICS.find((t) => t.id === slug)
@@ -119,14 +121,15 @@ const LearningTopicsPage = () => {
               </motion.p>
             </header>
 
-            {/* 3. [UPDATE] Grid Topics với Animation */}
-            {/* Thay thẻ section thường bằng motion.section và gán variants */}
-            <motion.section 
+            {/* 3. Grid Topics với Animation */}
+            <motion.section
               className="grid gap-8 md:grid-cols-2 lg:gap-10"
               variants={containerVariants}
               initial="hidden"
-              whileInView="visible" // Chạy animation khi cuộn tới
-              viewport={{ once: true, margin: "-100px" }} // Chỉ chạy 1 lần
+              {...(!shouldReduceMotion && {
+                whileInView: "visible",
+                viewport: { once: true, margin: "-100px" },
+              })}
             >
               {LEARNING_TOPICS.map((topicItem, index) => (
                 // Bọc Link trong motion.div để áp dụng animation cho từng item

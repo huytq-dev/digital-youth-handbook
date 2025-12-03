@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import { showToast } from "@/lib/toast";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface TopicDetailTemplateProps {
   topic: LearningTopic;
@@ -144,8 +145,8 @@ const sectionVariants = {
 };
 
 export const TopicDetailTemplate = ({ topic }: TopicDetailTemplateProps) => {
-  // State lưu section đang hiển thị
   const [activeSection, setActiveSection] = useState<string>("");
+  const shouldReduceMotion = useReducedMotion();
 
   // Logic theo dõi cuộn trang (Scroll Spy)
   useEffect(() => {
@@ -221,7 +222,7 @@ export const TopicDetailTemplate = ({ topic }: TopicDetailTemplateProps) => {
         </div>
 
         <div className="mx-auto max-w-6xl px-4 relative z-10">
-          <motion.header 
+          <motion.header
             className="mb-12 text-center"
             variants={textContainerVariants}
             initial="hidden"
@@ -302,14 +303,18 @@ export const TopicDetailTemplate = ({ topic }: TopicDetailTemplateProps) => {
             <motion.section
               id="section-content"
               variants={sectionVariants}
-              viewport={{ once: true, margin: "-100px" }}
               className="rounded-xl border-2 border-black bg-white p-6 shadow-[6px_6px_0px_black] scroll-mt-28"
+              {...(!shouldReduceMotion && {
+                viewport: { once: true, margin: "-100px" },
+              })}
             >
               <motion.div
                 variants={textContainerVariants}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
+                {...(!shouldReduceMotion && {
+                  whileInView: "visible",
+                  viewport: { once: true, margin: "-50px" },
+                })}
               >
                 <motion.h2 
                   variants={textH2Variants}
@@ -348,15 +353,19 @@ export const TopicDetailTemplate = ({ topic }: TopicDetailTemplateProps) => {
             <motion.section
               id="section-infographic"
               variants={sectionVariants}
-              viewport={{ once: true }}
               className="rounded-xl border-2 border-black bg-white p-2 shadow-[6px_6px_0px_black] scroll-mt-28"
+              {...(!shouldReduceMotion && {
+                viewport: { once: true },
+              })}
             >
-              <motion.div 
+              <motion.div
                 className="border-b-2 border-black bg-purple-100 p-3 mb-2 flex items-center justify-between rounded-t-lg"
                 variants={textContainerVariants}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
+                {...(!shouldReduceMotion && {
+                  whileInView: "visible",
+                  viewport: { once: true },
+                })}
               >
                 <motion.h2 
                   variants={textH2Variants}
