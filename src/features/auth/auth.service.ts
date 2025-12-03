@@ -84,6 +84,7 @@ export const authService = {
    * Save authentication data (token, refresh token, user, expiry)
    */
   saveAuthData: (data: SignInResponseDataModel, user?: UserDomainModel): void => {
+<<<<<<< HEAD
     if (data.AccessToken) {
       authService.setAccessToken(data.AccessToken);
     }
@@ -92,6 +93,16 @@ export const authService = {
     }
     if (data.ExpiresIn) {
       authService.setTokenExpiry(data.ExpiresIn);
+=======
+    if (data.accessToken) {
+      authService.setAccessToken(data.accessToken);
+    }
+    if (data.refreshToken) {
+      authService.setRefreshToken(data.refreshToken);
+    }
+    if (data.expiresIn) {
+      authService.setTokenExpiry(data.expiresIn);
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
     }
     if (user) {
       authService.setUser(user);

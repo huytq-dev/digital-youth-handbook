@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+<<<<<<< HEAD
 import { toast } from "sonner";
+=======
+import { showToast } from "@/lib/toast";
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertCircle, Eye, EyeOff, Loader2, ArrowRight, Mail, Lock, User } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -350,7 +354,11 @@ export function SocialLoginButtons({
     if (onGoogleClick) {
       onGoogleClick();
     } else {
+<<<<<<< HEAD
       toast.info(t("auth.signIn.socialComingSoon") || "Tính năng này sắp ra mắt");
+=======
+      showToast.info(t("auth.signIn.socialComingSoon") || "Tính năng này sắp ra mắt");
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
     }
   };
 
@@ -358,7 +366,11 @@ export function SocialLoginButtons({
     if (onFacebookClick) {
       onFacebookClick();
     } else {
+<<<<<<< HEAD
       toast.info(t("auth.signIn.socialComingSoon") || "Tính năng này sắp ra mắt");
+=======
+      showToast.info(t("auth.signIn.socialComingSoon") || "Tính năng này sắp ra mắt");
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
     }
   };
 

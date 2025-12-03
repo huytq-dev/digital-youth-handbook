@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, Link } from "react-router-dom";
+<<<<<<< HEAD
 import { toast } from "sonner";
+=======
+import { showToast } from "@/lib/toast";
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 import { motion } from "framer-motion";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,7 +39,11 @@ export function ForgotPasswordForm() {
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
+<<<<<<< HEAD
       Email: "",
+=======
+      email: "",
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
     },
   });
 
@@ -45,6 +53,7 @@ export function ForgotPasswordForm() {
 
       if (isApiResponseSuccess(response)) {
         setIsSuccess(true);
+<<<<<<< HEAD
         toast.success(
           t("auth.forgotPassword.successTitle") || "Email đã được gửi!",
           {
@@ -60,6 +69,14 @@ export function ForgotPasswordForm() {
           {
             description: errorMessage,
           }
+=======
+        // Không cần toast vì đã có success state hiển thị ở giữa màn hình
+      } else {
+        const errorMessage = getApiErrorMessage(response);
+        showToast.error(
+          t("auth.forgotPassword.errorTitle") || "Gửi email thất bại",
+          errorMessage
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
         );
       }
     } catch (error: unknown) {
@@ -100,11 +117,17 @@ export function ForgotPasswordForm() {
         }
       }
 
+<<<<<<< HEAD
       toast.error(
         t("auth.forgotPassword.errorTitle") || "Gửi email thất bại",
         {
           description: errorMessage,
         }
+=======
+      showToast.error(
+        t("auth.forgotPassword.errorTitle") || "Gửi email thất bại",
+        errorMessage
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
       );
     }
   };
@@ -136,6 +159,7 @@ export function ForgotPasswordForm() {
               "Vui lòng kiểm tra email của bạn. Chúng tôi đã gửi link đặt lại mật khẩu đến địa chỉ email bạn đã cung cấp."}
           </AnimatedText>
         </p>
+<<<<<<< HEAD
         <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm mx-auto">
           <Button
             onClick={() => navigate("/auth/sign-in")}
@@ -158,6 +182,39 @@ export function ForgotPasswordForm() {
             </AnimatedText>
           </Button>
         </div>
+=======
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex flex-col sm:flex-row gap-3 w-full max-w-sm mx-auto"
+        >
+          <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              onClick={() => navigate("/auth/sign-in")}
+              variant="outline"
+              className="w-full sm:flex-1"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              <AnimatedText>
+                {t("auth.forgotPassword.backToSignIn") || "Quay lại đăng nhập"}
+              </AnimatedText>
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button
+              onClick={() => {
+                setIsSuccess(false);
+              }}
+              className="w-full sm:flex-1 bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary))]/90"
+            >
+              <AnimatedText>
+                {t("auth.forgotPassword.resendEmail") || "Gửi lại email"}
+              </AnimatedText>
+            </Button>
+          </motion.div>
+        </motion.div>
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
       </motion.div>
     );
   }
@@ -204,11 +261,19 @@ export function ForgotPasswordForm() {
           placeholder={
             t("auth.forgotPassword.emailPlaceholder") || "example@email.com"
           }
+<<<<<<< HEAD
           error={errors.Email?.message}
           register={register("Email")}
           disabled={isLoading}
           focused={focusedField === "Email"}
           onFocus={() => setFocusedField("Email")}
+=======
+          error={errors.email?.message}
+          register={register("email")}
+          disabled={isLoading}
+          focused={focusedField === "email"}
+          onFocus={() => setFocusedField("email")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           onBlur={() => setFocusedField(null)}
         />
       </motion.div>

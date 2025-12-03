@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
+<<<<<<< HEAD
 import { toast } from "sonner";
+=======
+import { showToast } from "@/lib/toast";
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,9 +44,15 @@ export function ResetPasswordForm() {
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
+<<<<<<< HEAD
       Token: "",
       NewPassword: "",
       ConfirmPassword: "",
+=======
+      token: "",
+      newPassword: "",
+      confirmPassword: "",
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
     },
   });
 
@@ -51,9 +61,15 @@ export function ResetPasswordForm() {
     const tokenFromUrl = searchParams.get("token");
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
+<<<<<<< HEAD
       setValue("Token", tokenFromUrl);
     } else {
       toast.error(
+=======
+      setValue("token", tokenFromUrl);
+    } else {
+      showToast.error(
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
         t("auth.resetPassword.invalidToken") || "Token không hợp lệ hoặc đã hết hạn"
       );
       setTimeout(() => {
@@ -68,6 +84,7 @@ export function ResetPasswordForm() {
 
       if (isApiResponseSuccess(response)) {
         setIsSuccess(true);
+<<<<<<< HEAD
         toast.success(
           t("auth.resetPassword.successTitle") || "Đặt lại mật khẩu thành công!",
           {
@@ -76,6 +93,9 @@ export function ResetPasswordForm() {
               "Mật khẩu của bạn đã được đặt lại thành công.",
           }
         );
+=======
+        // Không cần toast vì đã có success state hiển thị ở giữa màn hình
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 
         // Redirect về trang đăng nhập sau 3 giây
         setTimeout(() => {
@@ -83,11 +103,17 @@ export function ResetPasswordForm() {
         }, 3000);
       } else {
         const errorMessage = getApiErrorMessage(response);
+<<<<<<< HEAD
         toast.error(
           t("auth.resetPassword.errorTitle") || "Đặt lại mật khẩu thất bại",
           {
             description: errorMessage,
           }
+=======
+        showToast.error(
+          t("auth.resetPassword.errorTitle") || "Đặt lại mật khẩu thất bại",
+          errorMessage
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
         );
       }
     } catch (error: unknown) {
@@ -128,11 +154,17 @@ export function ResetPasswordForm() {
         }
       }
 
+<<<<<<< HEAD
       toast.error(
         t("auth.resetPassword.errorTitle") || "Đặt lại mật khẩu thất bại",
         {
           description: errorMessage,
         }
+=======
+      showToast.error(
+        t("auth.resetPassword.errorTitle") || "Đặt lại mật khẩu thất bại",
+        errorMessage
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
       );
     }
   };
@@ -236,11 +268,19 @@ export function ResetPasswordForm() {
           placeholder={
             t("auth.resetPassword.newPasswordPlaceholder") || "Tối thiểu 6 ký tự"
           }
+<<<<<<< HEAD
           error={errors.NewPassword?.message}
           register={register("NewPassword")}
           disabled={isLoading}
           focused={focusedField === "NewPassword"}
           onFocus={() => setFocusedField("NewPassword")}
+=======
+          error={errors.newPassword?.message}
+          register={register("newPassword")}
+          disabled={isLoading}
+          focused={focusedField === "newPassword"}
+          onFocus={() => setFocusedField("newPassword")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           onBlur={() => setFocusedField(null)}
           showPassword={showPassword}
           onTogglePassword={() => setShowPassword(!showPassword)}
@@ -256,11 +296,19 @@ export function ResetPasswordForm() {
             t("auth.resetPassword.confirmPasswordPlaceholder") ||
             "Nhập lại mật khẩu mới"
           }
+<<<<<<< HEAD
           error={errors.ConfirmPassword?.message}
           register={register("ConfirmPassword")}
           disabled={isLoading}
           focused={focusedField === "ConfirmPassword"}
           onFocus={() => setFocusedField("ConfirmPassword")}
+=======
+          error={errors.confirmPassword?.message}
+          register={register("confirmPassword")}
+          disabled={isLoading}
+          focused={focusedField === "confirmPassword"}
+          onFocus={() => setFocusedField("confirmPassword")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           onBlur={() => setFocusedField(null)}
           showPassword={showPasswordConfirm}
           onTogglePassword={() => setShowPasswordConfirm(!showPasswordConfirm)}

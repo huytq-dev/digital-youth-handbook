@@ -3,26 +3,43 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, Link } from "react-router-dom";
+<<<<<<< HEAD
 // import { toast } from "sonner";
+=======
+import { showToast } from "@/lib/toast";
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AnimatedText } from "@/components/animated-text";
 import { signUpSchema, type SignUpFormData } from "../auth.schema";
+<<<<<<< HEAD
 // import { useSignUpMutation } from "../auth.slice";
 // import {
 //   isApiResponseSuccess,
 //   getApiErrorMessage,
 // } from "@/features/common/common.type";
 // import type { ApiResponse } from "@/features/common/common.type";
+=======
+import { useSignUpMutation } from "../auth.slice";
+import {
+  isApiResponseSuccess,
+  getApiErrorMessage,
+} from "@/features/common/common.type";
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 import { containerVariants, itemVariants } from "../constants/auth.constants";
 import {
   TextField,
   EmailField,
   PasswordField,
   SubmitButton,
+<<<<<<< HEAD
   SocialLoginButtons,
   Divider,
+=======
+  // SocialLoginButtons,
+  // Divider,
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 } from "./shared/auth-form-components"; // Cập nhật đường dẫn import nếu cần thiết (ví dụ: ./shared/auth-form-components)
 
 // Constants
@@ -57,8 +74,12 @@ export function SignUpForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
+<<<<<<< HEAD
   // const [signUp, { isLoading }] = useSignUpMutation();
   const isLoading = false;
+=======
+  const [signUp, { isLoading }] = useSignUpMutation();
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 
   const {
     register,
@@ -68,6 +89,7 @@ export function SignUpForm() {
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+<<<<<<< HEAD
       Name: "",
       Email: "",
       Password: "",
@@ -77,6 +99,17 @@ export function SignUpForm() {
   });
 
   const passwordValue = watch("Password");
+=======
+      name: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+      termsAccepted: false,
+    },
+  });
+
+  const passwordValue = watch("password");
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 
   // Tối ưu: Giảm delay và bỏ reset() vì component sẽ unmount
   useEffect(() => {
@@ -92,6 +125,7 @@ export function SignUpForm() {
   // Tối ưu: Sử dụng useCallback để memoize handler
   const onSubmit = useCallback(
     async (data: SignUpFormData) => {
+<<<<<<< HEAD
       logDev("Submitting sign up request (UI test only)", data);
       setIsSuccess(true);
 
@@ -99,6 +133,10 @@ export function SignUpForm() {
       ORIGINAL API LOGIC (disabled for UI testing)
       try {
         const { PasswordConfirm, TermsAccepted, ...submitData } = data;
+=======
+      try {
+        const { passwordConfirm, termsAccepted, ...submitData } = data;
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 
         logDev("Submitting sign up request", submitData);
 
@@ -108,6 +146,7 @@ export function SignUpForm() {
 
         if (isApiResponseSuccess(response)) {
           setIsSuccess(true);
+<<<<<<< HEAD
           toast.success(
             t("auth.signUp.successTitle") || "Đăng ký thành công!",
             {
@@ -121,10 +160,17 @@ export function SignUpForm() {
           toast.error(t("auth.signUp.errorTitle") || "Đăng ký thất bại", {
             description: errorMessage,
           });
+=======
+          // Không cần toast vì đã có success state hiển thị ở giữa màn hình
+        } else {
+          const errorMessage = getApiErrorMessage(response);
+          showToast.error(t("auth.signUp.errorTitle") || "Đăng ký thất bại", errorMessage);
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
         }
       } catch (error: unknown) {
         logDev("Sign up API error", error);
 
+<<<<<<< HEAD
         const errorMessage = extractErrorMessage(error, t);
 
         toast.error(t("auth.signUp.errorTitle") || "Đăng ký thất bại", {
@@ -134,6 +180,18 @@ export function SignUpForm() {
       */
     },
     [setIsSuccess]
+=======
+        const errorMessage = getApiErrorMessage(
+          error && typeof error === "object" && "data" in error
+            ? (error as any).data
+            : null
+        );
+
+        showToast.error(t("auth.signUp.errorTitle") || "Đăng ký thất bại", errorMessage);
+      }
+    },
+    [signUp, t]
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
   );
 
   // Tối ưu: Password strength indicator sync với schema
@@ -223,11 +281,19 @@ export function SignUpForm() {
           id="signup-name"
           label={t("auth.signUp.name") || "Họ và Tên"}
           placeholder={t("auth.signUp.namePlaceholder") || "Nguyễn Văn A"}
+<<<<<<< HEAD
           error={errors.Name?.message}
           register={register("Name")}
           disabled={isLoading}
           focused={focusedField === "Name"}
           onFocus={() => setFocusedField("Name")}
+=======
+          error={errors.name?.message}
+          register={register("name")}
+          disabled={isLoading}
+          focused={focusedField === "name"}
+          onFocus={() => setFocusedField("name")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           onBlur={() => setFocusedField(null)}
         />
       </motion.div>
@@ -238,11 +304,19 @@ export function SignUpForm() {
           id="signup-email"
           label={t("auth.signUp.email") || "Email"}
           placeholder={t("auth.signUp.emailPlaceholder") || "example@email.com"}
+<<<<<<< HEAD
           error={errors.Email?.message}
           register={register("Email")}
           disabled={isLoading}
           focused={focusedField === "Email"}
           onFocus={() => setFocusedField("Email")}
+=======
+          error={errors.email?.message}
+          register={register("email")}
+          disabled={isLoading}
+          focused={focusedField === "email"}
+          onFocus={() => setFocusedField("email")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           onBlur={() => setFocusedField(null)}
         />
       </motion.div>
@@ -255,18 +329,30 @@ export function SignUpForm() {
           placeholder={
             t("auth.signUp.passwordPlaceholder") || "Tối thiểu 6 ký tự"
           }
+<<<<<<< HEAD
           error={errors.Password?.message}
           register={register("Password")}
           disabled={isLoading}
           focused={focusedField === "Password"}
           onFocus={() => setFocusedField("Password")}
+=======
+          error={errors.password?.message}
+          register={register("password")}
+          disabled={isLoading}
+          focused={focusedField === "password"}
+          onFocus={() => setFocusedField("password")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           onBlur={() => setFocusedField(null)}
           showPassword={showPassword}
           onTogglePassword={() => setShowPassword(!showPassword)}
         />
         {/* Password Strength Indicator */}
         <AnimatePresence>
+<<<<<<< HEAD
           {passwordValue && passwordValue.length > 0 && !errors.Password && (
+=======
+          {passwordValue && passwordValue.length > 0 && !errors.password && (
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
@@ -295,11 +381,19 @@ export function SignUpForm() {
           placeholder={
             t("auth.signUp.confirmPasswordPlaceholder") || "Nhập lại mật khẩu"
           }
+<<<<<<< HEAD
           error={errors.PasswordConfirm?.message}
           register={register("PasswordConfirm")}
           disabled={isLoading}
           focused={focusedField === "PasswordConfirm"}
           onFocus={() => setFocusedField("PasswordConfirm")}
+=======
+          error={errors.passwordConfirm?.message}
+          register={register("passwordConfirm")}
+          disabled={isLoading}
+          focused={focusedField === "passwordConfirm"}
+          onFocus={() => setFocusedField("passwordConfirm")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           onBlur={() => setFocusedField(null)}
           showPassword={showPasswordConfirm}
           onTogglePassword={() => setShowPasswordConfirm(!showPasswordConfirm)}
@@ -317,12 +411,20 @@ export function SignUpForm() {
             type="checkbox"
             className={cn(
               "h-4 w-4 rounded border-[hsl(var(--input))] transition-all cursor-pointer mt-0.5",
+<<<<<<< HEAD
               errors.TermsAccepted
+=======
+              errors.termsAccepted
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
                 ? "border-[hsl(var(--destructive))] text-[hsl(var(--destructive))] focus:ring-[hsl(var(--destructive))]"
                 : "text-[hsl(var(--primary))] focus:ring-[hsl(var(--primary))] border-[hsl(var(--input))] hover:border-[hsl(var(--primary))]", // Sử dụng CSS variables từ global.css
               "focus:ring-2 focus:ring-offset-0 bg-[hsl(var(--background))]"
             )}
+<<<<<<< HEAD
             {...register("TermsAccepted")}
+=======
+            {...register("termsAccepted")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
             disabled={isLoading}
           />
         </div>
@@ -331,7 +433,11 @@ export function SignUpForm() {
             htmlFor="terms"
             className={cn(
               "text-sm font-medium leading-relaxed cursor-pointer select-none flex flex-wrap items-center",
+<<<<<<< HEAD
               errors.TermsAccepted ? "text-[hsl(var(--destructive))]" : "text-[hsl(var(--muted-foreground))]"
+=======
+              errors.termsAccepted ? "text-[hsl(var(--destructive))]" : "text-[hsl(var(--muted-foreground))]"
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
             )}
           >
             <AnimatedText>
@@ -358,7 +464,11 @@ export function SignUpForm() {
             </Link>
           </label>
           <AnimatePresence>
+<<<<<<< HEAD
             {errors.TermsAccepted && (
+=======
+            {errors.termsAccepted && (
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
@@ -367,7 +477,11 @@ export function SignUpForm() {
               >
                 <AlertCircle className="w-3.5 h-3.5 text-[hsl(var(--destructive))] flex-shrink-0" />
                 <p className="text-[11px] font-medium text-[hsl(var(--destructive))]">
+<<<<<<< HEAD
                   {errors.TermsAccepted.message}
+=======
+                  {errors.termsAccepted.message}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
                 </p>
               </motion.div>
             )}
@@ -384,17 +498,28 @@ export function SignUpForm() {
         />
       </motion.div>
 
+<<<<<<< HEAD
       {/* Divider */}
       <motion.div variants={itemVariants}>
+=======
+      {/* Social Login - Temporarily commented out for testing */}
+      {/* <motion.div variants={itemVariants}>
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
         <Divider
           text={t("auth.signUp.orContinueWith") || "Hoặc tiếp tục với"}
         />
       </motion.div>
 
+<<<<<<< HEAD
       {/* Social Login Buttons */}
       <motion.div variants={itemVariants}>
         <SocialLoginButtons isLoading={isLoading} />
       </motion.div>
+=======
+      <motion.div variants={itemVariants}>
+        <SocialLoginButtons isLoading={isLoading} />
+      </motion.div> */}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 
       {/* Sign In Link */}
       <motion.div className="text-center pt-4" variants={itemVariants}>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
 // import { toast } from "sonner";
@@ -11,6 +12,16 @@ import { signInSchema, type SignInFormData } from "@/features/auth/auth.schema";
 // import { useSignInMutation } from "@/features/auth/auth.slice";
 // import { isApiResponseSuccess, getApiErrorMessage } from "@/features/common/common.type";
 // import { authService } from "@/features/auth/auth.service";
+=======
+import { Link, useNavigate } from "react-router-dom";
+import { showToast } from "@/lib/toast";
+import { motion } from "framer-motion";
+import { AnimatedText } from "@/components/animated-text";
+import { signInSchema, type SignInFormData } from "@/features/auth/auth.schema";
+import { useSignInMutation } from "@/features/auth/auth.slice";
+import { isApiResponseSuccess, getApiErrorMessage } from "@/features/common/common.type";
+import { authService } from "@/features/auth/auth.service";
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 // import { useSocialLogin } from "@/features/auth/hooks/use-social-login";
 import {
   containerVariants,
@@ -20,12 +31,18 @@ import {
   EmailField,
   PasswordField,
   SubmitButton,
+<<<<<<< HEAD
   SocialLoginButtons,
   Divider,
+=======
+  // SocialLoginButtons,
+  // Divider,
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 } from "./shared/auth-form-components";
 
 export function SignInForm() {
   const { t } = useTranslation();
+<<<<<<< HEAD
   // const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -37,6 +54,16 @@ export function SignInForm() {
   const handleFacebookLogin = () =>
     console.log("Facebook login clicked (UI test)");
   const isSocialLoading = false;
+=======
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  const [signIn, { isLoading }] = useSignInMutation();
+  // Temporarily commented out social login for testing
+  // const { handleGoogleLogin, handleFacebookLogin, isLoading: isSocialLoading } = useSocialLogin();
+  // const isSocialLoading = false;
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
 
   const {
     register,
@@ -45,14 +72,47 @@ export function SignInForm() {
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
+<<<<<<< HEAD
       Email: "",
       Password: "",
+=======
+      email: "",
+      password: "",
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
     },
   });
 
   const onSubmit = async (data: SignInFormData) => {
+<<<<<<< HEAD
     console.log("Sign in submit (UI testing only)", data);
     // ... existing logic commented out ...
+=======
+    try {
+      const response = await signIn(data).unwrap();
+
+      if (isApiResponseSuccess(response)) {
+        const responseData = response.data || response.Data;
+        if (responseData) {
+          authService.saveAuthData(responseData);
+          showToast.success(
+            t("auth.signIn.successTitle") || "Đăng nhập thành công!",
+            t("auth.signIn.successMessage") || "Chào mừng bạn trở lại!"
+          );
+          navigate("/");
+        }
+      } else {
+        const errorMessage = getApiErrorMessage(response);
+        showToast.error(t("auth.signIn.errorTitle") || "Đăng nhập thất bại", errorMessage);
+      }
+    } catch (error: unknown) {
+      const errorMessage = getApiErrorMessage(
+        error && typeof error === "object" && "data" in error
+          ? (error as any).data
+          : null
+      );
+      showToast.error(t("auth.signIn.errorTitle") || "Đăng nhập thất bại", errorMessage);
+    }
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
   };
 
   return (
@@ -74,7 +134,11 @@ export function SignInForm() {
         <p className="text-[hsl(var(--muted-foreground))] text-sm font-medium">
           <AnimatedText>
             {t("auth.signIn.subtitle") ||
+<<<<<<< HEAD
               "Chào mừng bạn trở lại Tuổi Trẻ Online"}
+=======
+              "Chào mừng bạn trở lại Hành Trang Số"}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
           </AnimatedText>
         </p>
       </motion.div>
@@ -88,11 +152,19 @@ export function SignInForm() {
             placeholder={
               t("auth.signIn.emailPlaceholder") || "example@email.com"
             }
+<<<<<<< HEAD
             error={errors.Email?.message}
             register={register("Email")}
             disabled={isLoading}
             focused={focusedField === "Email"}
             onFocus={() => setFocusedField("Email")}
+=======
+            error={errors.email?.message}
+            register={register("email")}
+            disabled={isLoading}
+            focused={focusedField === "email"}
+            onFocus={() => setFocusedField("email")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
             onBlur={() => setFocusedField(null)}
           />
         </motion.div>
@@ -105,11 +177,19 @@ export function SignInForm() {
               placeholder={
                 t("auth.signIn.passwordPlaceholder") || "Nhập mật khẩu"
               }
+<<<<<<< HEAD
               error={errors.Password?.message}
               register={register("Password")}
               disabled={isLoading}
               focused={focusedField === "Password"}
               onFocus={() => setFocusedField("Password")}
+=======
+              error={errors.password?.message}
+              register={register("password")}
+              disabled={isLoading}
+              focused={focusedField === "password"}
+              onFocus={() => setFocusedField("password")}
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
               onBlur={() => setFocusedField(null)}
               showPassword={showPassword}
               onTogglePassword={() => setShowPassword(!showPassword)}
@@ -142,8 +222,13 @@ export function SignInForm() {
         />
       </motion.div>
 
+<<<<<<< HEAD
       {/* SOCIAL & FOOTER GROUP */}
       <div className="space-y-6">
+=======
+      {/* SOCIAL & FOOTER GROUP - Temporarily commented out for testing */}
+      {/* <div className="space-y-6">
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
         <motion.div variants={itemVariants}>
           <Divider
             text={t("auth.signIn.orContinueWith") || "Hoặc tiếp tục với"}
@@ -157,6 +242,7 @@ export function SignInForm() {
             onFacebookClick={handleFacebookLogin}
           />
         </motion.div>
+<<<<<<< HEAD
 
         <motion.div className="text-center" variants={itemVariants}>
           {/* Sử dụng CSS variable từ global.css */}
@@ -176,6 +262,28 @@ export function SignInForm() {
           </p>
         </motion.div>
       </div>
+=======
+      </div> */}
+
+      {/* Sign up link */}
+      <motion.div className="text-center pt-4" variants={itemVariants}>
+        {/* Sử dụng CSS variable từ global.css */}
+        <p className="text-sm text-[hsl(var(--muted-foreground))]">
+          <AnimatedText>
+            {t("auth.signIn.noAccount") || "Chưa có tài khoản?"}
+          </AnimatedText>{" "}
+          <Link
+            to="/auth/sign-up"
+            // Sử dụng CSS variable từ global.css
+            className="animated-underline text-[hsl(var(--primary))] font-bold hover:text-[hsl(var(--primary))]/80 transition-colors duration-200"
+          >
+            <AnimatedText>
+              {t("auth.signIn.signUpLink") || "Đăng ký ngay"}
+            </AnimatedText>
+          </Link>
+        </p>
+      </motion.div>
+>>>>>>> bd6d5d524b869f34ec4dd3fbf4acc06975bef341
     </motion.form>
   );
 }
